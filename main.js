@@ -1,65 +1,87 @@
 deaths2012to2017 = "https://data.ct.gov/resource/deaths.json"
-
+red = "#FF0000"
+green = "#00FF00"
+blue = "#0000FF"
+yellow = "#FFFF00"
+orange = "#FFAA00"
+purple = "#FF00FF"
 processedData = [{
-  name: "OpioidDeaths",
-  title: "any_opioid",
-  group: "analytics",
-  value: 0,
-},{
   name: "FentanylDeaths",
   title: "fentanyl",
   group: "analytics",
   value: 0,
+  color: blue,
+  isOpioid: true,
 }, {
   name: "HeroinDeaths",
   title: "heroin",
   group: "analytics",
   value: 0,
+  color: blue,
+  isOpioid: true,
 }, {
   name: "OxycodoneDeaths",
   title: "oxyc",
   group: "analytics",
   value: 0,
+  color: blue,
+  isOpioid: true,
 }, {
   name: "OxymorphoneDeaths",
   title: "oxym",
   group: "analytics",
   value: 0,
+  color: blue,
+  isOpioid: true,
 }, {
   name: "Morphine",
   title: "morphine_not_heroin",
   group: "analytics",
   value: 0,
+  color: blue,
+  isOpioid: true,
 }, {
   name: "HydrocodoneDeaths",
   title: "hydr_cod",
   group: "analytics",
   value: 0,
+  color: blue,
+  isOpioid: true,
 }, {
   name: "MethadoneDeaths",
   title: "methadone",
   group: "analytics",
   value: 0,
+  color: blue,
+  isOpioid: true,
 }, {
   name: "CocaineDeaths",
   title: "coc",
   group: "analytics",
   value: 0,
+  color: red,
+  isOpioid: false,
 }, {
   name: "AlcoholDeaths",
   title: "etoh",
   group: "analytics",
   value: 0,
+  color: orange,
+  isOpioid: false,
 }, {
   name: "AmphetamineDeaths",
   title: "amphet",
   group: "analytics",
   value: 0,
+  color: yellow,
+  isOpioid: false,
 }, {
   name: "BenzodiazepineDeaths",
   title: "benzo_s",
   group: "analytics",
   value: 0,
+  color: orange,
+  isOpioid: false,
 }]
 
 //REST API only allows for 1000 data requests at a time. this function allows me to use more.
@@ -86,43 +108,14 @@ function addData(url, dataCount) { //Accepts a URL for data, and how much data t
 }
 
 addData(deaths2012to2017,4083);
-// chart = {
-//   const root = pack(data);
+console.log(processedData);
 
-  const svg = d3.select('#visual').append('svg')
-      .attr("width", "100%")
-      .attr("height", "auto")
-      .attr("font-size", 10)
-      .attr("font-family", "sans-serif")
-      .attr("text-anchor", "middle")
-      .style('background-color', '#666666');
-  const leaf = svg.selectAll("g")
-    .data(processedData)
-    .enter().append("g")
-      .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`);
-
-  leaf.append("circle")
-      .attr("id", d => (d.leafUid = DOM.uid("leaf")).id)
-      .attr("r", d => d.value)
-      .attr("fill-opacity", 0.7)
-      .attr("fill", d => color(d.data.group));
-
-//   leaf.append("clipPath")
-//       .attr("id", d => (d.clipUid = DOM.uid("clip")).id)
-//     .append("use")
-//       .attr("xlink:href", d => d.leafUid.href);
-
-//   leaf.append("text")
-//       .attr("clip-path", d => d.clipUid)
-//     .selectAll("tspan")
-//     .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g))
-//     .enter().append("tspan")
-//       .attr("x", 0)
-//       .attr("y", (d, i, nodes) => `${i - nodes.length / 2 + 0.8}em`)
-//       .text(d => d);
-
-//   leaf.append("title")
-//       .text(d => `${d.data.title}\n${format(d.value)}`);
-
-//   return svg.node();
-// }
+function setup(){
+  balledData = createCanvas(100,100);
+  balledData.parent('sketch-holder')
+  for(let i = 0; i<=processedData.length; i++){
+    balledData.fill(processedData[i].color);
+    radius = processedData[i].value;
+    balledData.ellipse(50,50,radius,radius);
+  }
+}
