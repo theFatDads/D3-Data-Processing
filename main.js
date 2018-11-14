@@ -104,18 +104,50 @@ function addData(url, dataCount) { //Accepts a URL for data, and how much data t
         }
       }
     }
+    setTimeout(function(){exportToCsvFile(processedData);},1000)
   }
 }
 
 addData(deaths2012to2017,4083);
 console.log(processedData);
+"use strict";
 
-function setup(){
-  balledData = createCanvas(100,100);
-  balledData.parent('sketch-holder')
-  for(let i = 0; i<=processedData.length; i++){
-    balledData.fill(processedData[i].color);
-    radius = processedData[i].value;
-    balledData.ellipse(50,50,radius,radius);
-  }
+function parseJSONToCSVStr(jsonData) {
+    if(jsonData.length == 0) {
+        return '';
+    }
+    
+    let keys = Object.keys(jsonData[0]);
+    
+    let columnDelimiter = ',';
+    let lineDelimiter = '\n';
+    
+    let csvColumnHeader = keys.join(columnDelimiter);
+    let csvStr = csvColumnHeader + lineDelimiter;
+    
+    jsonData.forEach(item => {
+        keys.forEach((key, index) => {
+            if( (index > 0) && (index < keys.length-1) ) {
+                csvStr += columnDelimiter;
+            }
+            csvStr += item[key];
+        });
+        csvStr += lineDelimiter;
+    });
+
+    return encodeURIComponent(csvStr);;
 }
+"use strict";
+
+function exportToCsvFile(jsonData) {
+    let csvStr = parseJSONToCSVStr(jsonData);
+    let dataUri = 'data:text/csv;charset=utf-8,'+ csvStr;
+    
+    let exportFileDefaultName = 'data.csv';
+    
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+}
+setTimeout(function(){exportToCsvFile(processedData);},1000)
